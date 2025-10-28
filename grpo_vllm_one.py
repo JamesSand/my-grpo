@@ -8,7 +8,10 @@ import torch.multiprocessing as mp
 from tqdm import tqdm
 os.environ['TOKENIZERS_PARALLELISM'] = 'true'
 
-model_path = "/data2/Qwen/Qwen2.5-7B"
+# model_path = "/data2/Qwen/Qwen2.5-7B"
+
+model_path="Qwen/Qwen2.5-0.5B-Instruct"
+
 gen_device = 4    # GPU device for generation, don't put it in CUDA_VISIBLE_DEVICES
 beta = 0.04
 all_steps = 1000

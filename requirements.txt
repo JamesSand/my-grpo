@@ -8,3 +8,4 @@ tornado
 transformers
 vllm
 deepspeed
+datasets
