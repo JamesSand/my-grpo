@@ -27,7 +27,7 @@ use_bf16 = False  # Set to True if your GPU supports bf16
 
 # Generation parameters
 temperature = 0.9
-max_new_tokens = 700
+max_new_tokens = 1024
 
 print(f"Using device: {device}")
 print(f"Using bf16: {use_bf16}")
@@ -86,31 +86,58 @@ def get_per_token_logps(logits, input_ids):
 
 def generate_samples(model, prompts_text, num_samples):
     """Generate multiple samples for each prompt"""
-    all_answers = []
-    all_answer_ids = []
-    
+    all_answers, all_answer_ids = [], []
+    debug_cnt = 0
     for prompt in prompts_text:
+        print(f"gen {debug_cnt}"); debug_cnt += 1
         prompt_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
-        
-        # Generate multiple samples
-        for _ in range(num_samples):
-            with torch.no_grad():
-                output = model.generate(
-                    prompt_ids,
-                    max_new_tokens=max_new_tokens,
-                    temperature=temperature,
-                    do_sample=True,
-                    pad_token_id=tokenizer.pad_token_id,
-                    eos_token_id=tokenizer.eos_token_id,
-                )
-            
-            # Extract the generated answer
-            answer_ids = output[0, prompt_ids.shape[1]:]
-            answer_text = tokenizer.decode(answer_ids, skip_special_tokens=True)
-            all_answers.append(answer_text)
+        with torch.no_grad():
+            output = model.generate(
+                prompt_ids.repeat(num_samples, 1),
+                max_new_tokens=max_new_tokens,
+                temperature=temperature,
+                do_sample=True,
+                pad_token_id=tokenizer.pad_token_id,
+                eos_token_id=tokenizer.eos_token_id,
+            )
+        gen_part = output[:, prompt_ids.shape[1]:]
+        for i in range(gen_part.size(0)):
+            answer_ids = gen_part[i]
+            all_answers.append(tokenizer.decode(answer_ids, skip_special_tokens=True))
             all_answer_ids.append(answer_ids.cpu().tolist())
-    
     return all_answers, all_answer_ids
+
+
+# def generate_samples(model, prompts_text, num_samples):
+#     """Generate multiple samples for each prompt"""
+#     all_answers = []
+#     all_answer_ids = []
+    
+#     debug_cnt = 0
+    
+#     for prompt in prompts_text:
+#         print(f"gen {debug_cnt}")
+#         prompt_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
+        
+#         # Generate multiple samples
+#         for _ in range(num_samples):
+#             with torch.no_grad():
+#                 output = model.generate(
+#                     prompt_ids,
+#                     max_new_tokens=max_new_tokens,
+#                     temperature=temperature,
+#                     do_sample=True,
+#                     pad_token_id=tokenizer.pad_token_id,
+#                     eos_token_id=tokenizer.eos_token_id,
+#                 )
+            
+#             # Extract the generated answer
+#             answer_ids = output[0, prompt_ids.shape[1]:]
+#             answer_text = tokenizer.decode(answer_ids, skip_special_tokens=True)
+#             all_answers.append(answer_text)
+#             all_answer_ids.append(answer_ids.cpu().tolist())
+    
+#     return all_answers, all_answer_ids
 
 
 def compute_ref_logps(ref_model, prompt_ids, answer_ids, prompt_length):
@@ -194,8 +221,16 @@ def main():
     progress = tqdm(range(1, all_steps + 1), desc="Training")
     
     for step in progress:
-        # Sample questions from dataset
-        sampled_items = random.sample(QAs, Q_batch_size)
+        # Calculate start and end index based on step
+        start_idx = ((step - 1) * Q_batch_size) % len(QAs)
+        end_idx = start_idx + Q_batch_size
+        
+        # Handle wrapping around the dataset
+        if end_idx <= len(QAs):
+            sampled_items = QAs[start_idx:end_idx]
+        else:
+            # Wrap around to the beginning
+            sampled_items = QAs[start_idx:] + QAs[:end_idx - len(QAs)]
         
         # Prepare prompts
         prompts_text = [apply_chat_template(item['Q']) for item in sampled_items]
