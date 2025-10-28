@@ -19,3 +19,87 @@ config: {'model_path': 'Qwen/Qwen2.5-0.5B-Instruct', 'beta': 0.01, 'all_steps': 
 2025-10-28 17:41:20,292 INFO    MainThread:2586483 [wandb_run.py:_redirect():2426] Wrapping output streams.
 2025-10-28 17:41:20,293 INFO    MainThread:2586483 [wandb_run.py:_redirect():2449] Redirects installed.
 2025-10-28 17:41:20,295 INFO    MainThread:2586483 [wandb_init.py:init():1076] run started, returning control to user process
+2025-10-28 18:04:02,119 INFO    wandb-AsyncioManager-main:2586483 [service_client.py:_forward_responses():80] Reached EOF.
+2025-10-28 18:04:02,119 INFO    wandb-AsyncioManager-main:2586483 [mailbox.py:close():137] Closing mailbox, abandoning 1 handles.
+2025-10-28 18:04:02,636 ERROR   MainThread:2586483 [redirect.py:_on_write():664] [all runs] error in stderr callback
+Traceback (most recent call last):
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/lib/redirect.py", line 662, in _on_write
+    cb(written_data)
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/wandb_run.py", line 2436, in <lambda>
+    lambda data: self._console_raw_callback("stderr", data),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/wandb_run.py", line 399, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/wandb_run.py", line 457, in wrapper_fn
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/wandb_run.py", line 1595, in _console_raw_callback
+    self._backend.interface.publish_output_raw(name, data)
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/interface/interface.py", line 802, in publish_output_raw
+    self._publish_output_raw(o)
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/interface/interface_shared.py", line 37, in _publish_output_raw
+    self._publish(rec)
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/interface/interface_sock.py", line 43, in _publish
+    self._asyncer.run(lambda: self._client.publish(request))
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/lib/asyncio_manager.py", line 136, in run
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/concurrent/futures/_base.py", line 456, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/lib/asyncio_manager.py", line 219, in _wrap
+    return await fn()
+           ^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/lib/service/service_client.py", line 38, in publish
+    await self._send_server_request(request)
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/lib/service/service_client.py", line 64, in _send_server_request
+    await self._writer.drain()
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/asyncio/streams.py", line 392, in drain
+    await self._protocol._drain_helper()
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/asyncio/streams.py", line 166, in _drain_helper
+    raise ConnectionResetError('Connection lost')
+ConnectionResetError: Connection lost
+2025-10-28 18:04:02,642 ERROR   MainThread:2586483 [redirect.py:_on_write():664] [all runs] error in stderr callback
+Traceback (most recent call last):
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/lib/redirect.py", line 662, in _on_write
+    cb(written_data)
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/wandb_run.py", line 2436, in <lambda>
+    lambda data: self._console_raw_callback("stderr", data),
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/wandb_run.py", line 399, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/wandb_run.py", line 457, in wrapper_fn
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/wandb_run.py", line 1595, in _console_raw_callback
+    self._backend.interface.publish_output_raw(name, data)
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/interface/interface.py", line 802, in publish_output_raw
+    self._publish_output_raw(o)
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/interface/interface_shared.py", line 37, in _publish_output_raw
+    self._publish(rec)
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/interface/interface_sock.py", line 43, in _publish
+    self._asyncer.run(lambda: self._client.publish(request))
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/lib/asyncio_manager.py", line 136, in run
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/concurrent/futures/_base.py", line 456, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/lib/asyncio_manager.py", line 219, in _wrap
+    return await fn()
+           ^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/lib/service/service_client.py", line 38, in publish
+    await self._send_server_request(request)
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/wandb/sdk/lib/service/service_client.py", line 64, in _send_server_request
+    await self._writer.drain()
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/asyncio/streams.py", line 392, in drain
+    await self._protocol._drain_helper()
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/asyncio/streams.py", line 166, in _drain_helper
+    raise ConnectionResetError('Connection lost')
+ConnectionResetError: Connection lost

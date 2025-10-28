@@ -1,6 +1,13 @@
 """
 Simple GRPO implementation with ref model and training model on the same GPU.
 No multiprocessing, no ref server, no deepspeed.
+
+# Step 1: install environment
+pip install -r requirements.txt
+
+# Step 2: run code
+python grpo_single_gpu_simple.py
+
 """
 
 from transformers import AutoTokenizer, AutoModelForCausalLM
@@ -23,7 +30,7 @@ num_samples_per_prompt = 8  # num_pre_Q
 train_batch_size = 8 # backward for each 8 samples
 save_steps = 200
 clip_param = 0.2
-learning_rate = 1e-6
+learning_rate = 1e-5
 gradient_accumulation_steps = 4 # thise means we actually 
 use_bf16 = False  # Set to True if your GPU supports bf16
 use_wandb = True  # Set to True to enable wandb logging
@@ -48,8 +55,9 @@ dataset = load_dataset("openai/gsm8k", "main", split="train")
 QAs = [{'Q': x, 'A': y.split('####')[-1].strip()} 
        for x, y in zip(dataset['question'], dataset['answer'])]
 
-system_prompt = """You are a helpful assistant. A conversation between User and Assistant. The user asks a question, and the Assistant solves it. The Assistant first thinks about the reasoning process in the mind and then provides the user with the answer. The reasoning process and answer are enclosed within <think> </think> and<answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>."""
+# system_prompt = """You are a helpful assistant. A conversation between User and Assistant. The user asks a question, and the Assistant solves it. The Assistant first thinks about the reasoning process in the mind and then provides the user with the answer. The reasoning process and answer are enclosed within <think> </think> and<answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>."""
 
+system_prompt = "Let's think step by step and output the final answer within \\boxed{}."
 
 
 def apply_chat_template(question):
@@ -76,7 +84,6 @@ def reward_format(item, answer):
     reasoning_word_list = ["since", "therefore", "thus", "because", "so", "hence", "perhaps", "let", "actually", "maybe", "assume", "suppose", "consider", "it follows that", "we have", "note that", "observe that"]
     
     lower_answer = answer.lower()
-    
     reasoning_word_cnt = sum(lower_answer.count(word) for word in reasoning_word_list)
     
     if reasoning_word_cnt >= 10:
@@ -84,15 +91,6 @@ def reward_format(item, answer):
     
     return 0
     
-    # print(reasoning_word_cnt)
-    
-    # return 0
-    
-    
-    # # pattern = r"^<think>(?:(?!</?think>)[\s\S]*?)</think>\s*<answer>(?:(?!</?answer>)[\s\S]*?)</answer><\|im_end\|>$"
-    # pattern = r"^<think>.*?</think><answer>.*?</answer>$"
-    # return 1.25 if re.match(pattern, answer, re.DOTALL | re.VERBOSE) else -1
-
 
 def get_per_token_logps(logits, input_ids):
     """Compute per-token log probabilities"""
@@ -382,10 +380,11 @@ def main():
             }, step=step)
         
         # # Print sample answer
-        # if step % 5 == 0 and len(answers) > 0:
-        #     # print(f"\nSample answer: {answers[0][:200]}...")
+        if step % 5 == 0 and len(answers) > 0:
+            print(f"\nSample answer: {answers[0]}")
+            # print(f"\nSample answer: {answers[0][:200]}...")
             
-        print(f"\nSample answer: {answers[0]}")
+        # print(f"\nSample answer: {answers[0]}")
         
         # Save checkpoint
         if step % save_steps == 0:
