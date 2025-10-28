@@ -1,0 +1,54 @@
+{
+  "os": "Linux-6.8.0-84-generic-x86_64-with-glibc2.35",
+  "python": "CPython 3.12.12",
+  "startedAt": "2025-10-28T22:41:19.349280Z",
+  "program": "/ssd1/zhizhou/workspace/simple_GRPO/grpo_single_gpu_simple.py",
+  "codePath": "grpo_single_gpu_simple.py",
+  "codePathLocal": "grpo_single_gpu_simple.py",
+  "git": {
+    "remote": "git@github.com:JamesSand/my-grpo.git",
+    "commit": "2d31385abd0f97b6a7f605adc8247252f01c4488"
+  },
+  "email": "shazz20@mails.tsinghua.edu.cn",
+  "root": "/ssd1/zhizhou/workspace/simple_GRPO",
+  "host": "ece-895086",
+  "executable": "/home/zs7752/miniconda3/envs/trl/bin/python",
+  "cpu_count": 64,
+  "cpu_count_logical": 128,
+  "gpu": "NVIDIA RTX A6000",
+  "gpu_count": 3,
+  "disk": {
+    "/": {
+      "total": "2012967157760",
+      "used": "1389271326720"
+    }
+  },
+  "memory": {
+    "total": "270072717312"
+  },
+  "gpu_nvidia": [
+    {
+      "name": "NVIDIA RTX A6000",
+      "memoryTotal": "51527024640",
+      "cudaCores": 10752,
+      "architecture": "Ampere",
+      "uuid": "GPU-40597105-f69b-17bd-6591-0852313c30a9"
+    },
+    {
+      "name": "NVIDIA RTX A6000",
+      "memoryTotal": "51527024640",
+      "cudaCores": 10752,
+      "architecture": "Ampere",
+      "uuid": "GPU-a372a123-8eac-e548-92c5-aee963e00023"
+    },
+    {
+      "name": "NVIDIA RTX A6000",
+      "memoryTotal": "51527024640",
+      "cudaCores": 10752,
+      "architecture": "Ampere",
+      "uuid": "GPU-439b8991-65d7-64b2-b8b6-db5f1d9f718c"
+    }
+  ],
+  "cudaVersion": "12.4",
+  "writerId": "w2enzmilpao3trohlyzbd4bmwqnyo4os"
+}

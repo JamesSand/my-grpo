@@ -1,0 +1,139 @@
+Loading training model...
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading reference model...
+Training:   0%|                                                                                                      | 0/1000 [00:00<?, ?it/s]
+
+Step 1: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+gen 4
+11
+13
+9
+12
+12
+13
+9
+9
+2
+1
+2
+1
+6
+2
+5
+3
+6
+6
+8
+5
+8
+8
+5
+6
+6
+2
+3
+8
+3
+2
+3
+3
+9
+12
+14
+14
+15
+11
+4
+12
+  Prompt 0: All rewards same, skipping
+  Prompt 3: All rewards same, skipping
+
+Sample answer: To find out how many clips Natalia sold in total over April and May, we need to calculate the number of clips sold in each month separately and then add them together.
+
+1. In April, Natalia sold 48 clips.
+2. In May, she sold half as many clips as in April. So, she sold \( \frac{48}{2} = 24 \) clips in May.
+3. To find the total number of clips sold in both months, we add the number of clips sold in April to the number sold in May: \( 48 + 24 = 72 \).
+
+Therefore, Natalia sold a total of 72 clips in April and May.
+
+Step 2: Generating samples...
+gen 0
+gen 1
+gen 2
+Traceback (most recent call last):
+  File "/ssd1/zhizhou/workspace/simple_GRPO/grpo_single_gpu_simple.py", line 400, in <module>
+    main()
+  File "/ssd1/zhizhou/workspace/simple_GRPO/grpo_single_gpu_simple.py", line 259, in main
+    answers, answer_ids, old_logps = generate_samples(model, prompts_text, num_samples_per_prompt)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/ssd1/zhizhou/workspace/simple_GRPO/grpo_single_gpu_simple.py", line 110, in generate_samples
+    output = model.generate(
+             ^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/generation/utils.py", line 2564, in generate
+    result = decoding_method(
+             ^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/generation/utils.py", line 2787, in _sample
+    outputs = model_forward(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/utils/generic.py", line 918, in wrapper
+    output = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 449, in forward
+    outputs: BaseModelOutputWithPast = self.model(
+                                       ^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/utils/generic.py", line 1064, in wrapper
+    outputs = func(self, *args, **kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 384, in forward
+    hidden_states = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/modeling_layers.py", line 94, in __call__
+    return super().__call__(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 234, in forward
+    hidden_states, _ = self.self_attn(
+                       ^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 163, in forward
+    key_states, value_states = past_key_values.update(key_states, value_states, self.layer_idx, cache_kwargs)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/cache_utils.py", line 742, in update
+    def update(
+
+KeyboardInterrupt

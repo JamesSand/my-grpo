@@ -1,0 +1,94 @@
+_wandb:
+    value:
+        cli_version: 0.22.2
+        e:
+            ma8ilxa0lrsvdgd8fm8o61mn6ofdf6a1:
+                codePath: grpo_single_gpu_simple.py
+                codePathLocal: grpo_single_gpu_simple.py
+                cpu_count: 64
+                cpu_count_logical: 128
+                cudaVersion: "12.4"
+                disk:
+                    /:
+                        total: "2012967157760"
+                        used: "1389270429696"
+                email: shazz20@mails.tsinghua.edu.cn
+                executable: /home/zs7752/miniconda3/envs/trl/bin/python
+                git:
+                    commit: 2d31385abd0f97b6a7f605adc8247252f01c4488
+                    remote: git@github.com:JamesSand/my-grpo.git
+                gpu: NVIDIA RTX A6000
+                gpu_count: 3
+                gpu_nvidia:
+                    - architecture: Ampere
+                      cudaCores: 10752
+                      memoryTotal: "51527024640"
+                      name: NVIDIA RTX A6000
+                      uuid: GPU-40597105-f69b-17bd-6591-0852313c30a9
+                    - architecture: Ampere
+                      cudaCores: 10752
+                      memoryTotal: "51527024640"
+                      name: NVIDIA RTX A6000
+                      uuid: GPU-a372a123-8eac-e548-92c5-aee963e00023
+                    - architecture: Ampere
+                      cudaCores: 10752
+                      memoryTotal: "51527024640"
+                      name: NVIDIA RTX A6000
+                      uuid: GPU-439b8991-65d7-64b2-b8b6-db5f1d9f718c
+                host: ece-895086
+                memory:
+                    total: "270072717312"
+                os: Linux-6.8.0-84-generic-x86_64-with-glibc2.35
+                program: /ssd1/zhizhou/workspace/simple_GRPO/grpo_single_gpu_simple.py
+                python: CPython 3.12.12
+                root: /ssd1/zhizhou/workspace/simple_GRPO
+                startedAt: "2025-10-28T22:15:31.952280Z"
+                writerId: ma8ilxa0lrsvdgd8fm8o61mn6ofdf6a1
+        m: []
+        python_version: 3.12.12
+        t:
+            "1":
+                - 1
+                - 11
+                - 49
+                - 51
+                - 71
+            "2":
+                - 1
+                - 11
+                - 41
+                - 49
+                - 51
+                - 71
+            "3":
+                - 16
+                - 61
+            "4": 3.12.12
+            "5": 0.22.2
+            "6": 4.57.1
+            "12": 0.22.2
+            "13": linux-x86_64
+Q_batch_size:
+    value: 5
+all_steps:
+    value: 1000
+beta:
+    value: 0.01
+clip_param:
+    value: 0.2
+gradient_accumulation_steps:
+    value: 4
+learning_rate:
+    value: 1e-06
+max_new_tokens:
+    value: 1024
+model_path:
+    value: Qwen/Qwen3-0.6B
+num_samples_per_prompt:
+    value: 8
+temperature:
+    value: 0.9
+train_batch_size:
+    value: 8
+use_bf16:
+    value: false

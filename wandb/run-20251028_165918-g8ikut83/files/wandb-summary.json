@@ -1,0 +1,1 @@
+{"reward/format":-1,"loss/total":0.002863887697458267,"step":20,"loss/kl_loss":0.0036544837057590485,"_wandb":{"runtime":806},"loss/pg_loss":-0.0007905960083007812,"_runtime":806.571834479,"_timestamp":1.761689541361614e+09,"_step":20,"reward/correct":-0.7}

@@ -97,6 +97,7 @@ def reward_correct(item, answer):
     ans = parse(lastnum, extraction_config=[ExprExtractionConfig()])
     ground_truth = parse(item["A"], extraction_config=[ExprExtractionConfig()])
     return 1 if verify(ans, ground_truth) else -1
+
 def reward_format(item, answer):
     # pattern = r"^<think>(?:(?!</?think>)[\s\S]*?)</think>\s*<answer>(?:(?!</?answer>)[\s\S]*?)</answer><\|im_end\|>$"
     pattern = r"^<think>.*?</think><answer>.*?</answer>$"

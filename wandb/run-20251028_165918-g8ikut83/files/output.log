@@ -1,0 +1,269 @@
+Loading training model...
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading reference model...
+Loss: -0.000323:   0%|▎                                                                                   | 3/1000 [02:24<14:26:41, 52.16s/it]
+
+Step 1: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+gen 4
+  Prompt 0: All rewards same, skipping
+
+Step 2: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+gen 4
+  Prompt 1: All rewards same, skipping
+  Prompt 3: All rewards same, skipping
+  Prompt 4: All rewards same, skipping
+
+Step 3: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+gen 4
+  Prompt 0: All rewards same, skipping
+  Prompt 4: All rewards same, skipping
+
+Step 4: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+gen 4
+  Prompt 0: All rewards same, skipping
+  Prompt 2: All rewards same, skipping
+
+Step 5: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+gen 4
+  Prompt 2: All rewards same, skipping
+
+Sample answer: To find out how many stamps Bella bought in total, we need to add up the number of each type of stamp she bought.
+
+- Snowflake stamps: 11
+- Truck stamps: 9 more than snowflake stamps, so that's 11 + 9...
+
+Step 6: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+gen 4
+
+Step 7: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+gen 4
+  Prompt 2: All rewards same, skipping
+
+Step 8: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+gen 4
+  Prompt 3: All rewards same, skipping
+  Prompt 4: All rewards same, skipping
+
+Step 9: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+gen 4
+  Prompt 0: All rewards same, skipping
+  Prompt 2: All rewards same, skipping
+
+Step 10: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+gen 4
+  Prompt 1: All rewards same, skipping
+
+Sample answer: To calculate the total cost, we need to add up the cost of each item separately.
+The cost of the unicorn piñata is $13.
+The cost of Reese's candy is 4 x $9 = $36.
+The cost of Snickers candy is 3 x $5 ...
+
+Step 11: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+gen 4
+  Prompt 4: All rewards same, skipping
+
+Step 12: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+gen 4
+  Prompt 1: All rewards same, skipping
+  Prompt 3: All rewards same, skipping
+
+Step 13: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+gen 4
+  Prompt 1: All rewards same, skipping
+  Prompt 3: All rewards same, skipping
+  Prompt 4: All rewards same, skipping
+
+Step 14: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+gen 4
+  Prompt 1: All rewards same, skipping
+  Prompt 2: All rewards same, skipping
+  Prompt 3: All rewards same, skipping
+
+Step 15: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+gen 4
+
+Sample answer: Harry has 68/2=14 apples.
+If Martha has 68 apples, then Tim has 68-30=38 apples.
+And if Harry has half as many apples as Tim, then Harry has 38/2=19 apples.
+Therefore, the answer is 19....
+
+Step 16: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+gen 4
+  Prompt 3: All rewards same, skipping
+
+Step 17: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+gen 4
+
+Step 18: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+gen 4
+  Prompt 4: All rewards same, skipping
+
+Step 19: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+gen 4
+  Prompt 0: All rewards same, skipping
+  Prompt 1: All rewards same, skipping
+  Prompt 2: All rewards same, skipping
+
+Step 20: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+gen 4
+  Prompt 0: All rewards same, skipping
+  Prompt 2: All rewards same, skipping
+  Prompt 3: All rewards same, skipping
+  Prompt 4: All rewards same, skipping
+
+Sample answer: The number of iron nickels Alice gets as change is 20*.2=4
+The total value of the iron nickels is 4*3=12
+The value of the remaining 16 nickels is 16/5*2=6.4
+So the total value of her money is 12+6.4=1...
+
+Step 21: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+Traceback (most recent call last):
+  File "/ssd1/zhizhou/workspace/simple_GRPO/grpo_single_gpu_simple.py", line 389, in <module>
+  File "/ssd1/zhizhou/workspace/simple_GRPO/grpo_single_gpu_simple.py", line 250, in main
+    # Compute rewards
+
+  File "/ssd1/zhizhou/workspace/simple_GRPO/grpo_single_gpu_simple.py", line 101, in generate_samples
+    temperature=temperature,
+         ^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/generation/utils.py", line 2564, in generate
+    result = decoding_method(
+             ^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/generation/utils.py", line 2787, in _sample
+    outputs = model_forward(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/utils/generic.py", line 918, in wrapper
+    output = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 449, in forward
+    outputs: BaseModelOutputWithPast = self.model(
+                                       ^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/utils/generic.py", line 1064, in wrapper
+    outputs = func(self, *args, **kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 384, in forward
+    hidden_states = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/modeling_layers.py", line 94, in __call__
+    return super().__call__(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 248, in forward
+    hidden_states = self.post_attention_layernorm(hidden_states)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 200, in forward
+    hidden_states = hidden_states * torch.rsqrt(variance + self.variance_epsilon)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

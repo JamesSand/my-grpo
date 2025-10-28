@@ -1,0 +1,102 @@
+Loading training model...
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading reference model...
+Loss: 0.000070:   0%|                                                                                    | 1/1000 [02:12<36:44:49, 132.42s/it]
+
+Step 1: Generating samples...
+gen 0
+gen 1
+gen 2
+gen 3
+gen 4
+  Prompt 0: All rewards same, skipping
+  Prompt 1: All rewards same, skipping
+  Prompt 3: All rewards same, skipping
+  Prompt 4: All rewards same, skipping
+
+Step 2: Generating samples...
+gen 0
+gen 1
+gen 2
+Traceback (most recent call last):
+  File "/ssd1/zhizhou/workspace/simple_GRPO/grpo_single_gpu_simple.py", line 387, in <module>
+    main()
+  File "/ssd1/zhizhou/workspace/simple_GRPO/grpo_single_gpu_simple.py", line 247, in main
+    answers, answer_ids, old_logps = generate_samples(model, prompts_text, num_samples_per_prompt)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/ssd1/zhizhou/workspace/simple_GRPO/grpo_single_gpu_simple.py", line 98, in generate_samples
+    output = model.generate(
+             ^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/generation/utils.py", line 2564, in generate
+    result = decoding_method(
+             ^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/generation/utils.py", line 2787, in _sample
+    outputs = model_forward(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/utils/generic.py", line 918, in wrapper
+    output = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py", line 480, in forward
+    outputs: BaseModelOutputWithPast = self.model(
+                                       ^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/utils/generic.py", line 1064, in wrapper
+    outputs = func(self, *args, **kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py", line 410, in forward
+    hidden_states = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/modeling_layers.py", line 94, in __call__
+    return super().__call__(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py", line 260, in forward
+    hidden_states, _ = self.self_attn(
+                       ^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py", line 201, in forward
+    key_states = self.k_norm(self.k_proj(hidden_states).view(hidden_shape)).transpose(1, 2)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/transformers/models/qwen3/modeling_qwen3.py", line 64, in forward
+    return self.weight * hidden_states.to(input_dtype)
+           ^^^^^^^^^^^
+  File "/home/zs7752/miniconda3/envs/trl/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1949, in __getattr__
+    def __getattr__(self, name: str) -> Union[Tensor, "Module"]:
+
+KeyboardInterrupt

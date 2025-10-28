@@ -10,11 +10,13 @@ import torch.nn as nn
 import numpy as np
 from tqdm import tqdm
 from torch.nn.utils.rnn import pad_sequence
+import wandb
 
 # Configuration
+# model_path = "Qwen/Qwen3-0.6B"
 model_path = "Qwen/Qwen2.5-0.5B-Instruct"
 device = "cuda" if torch.cuda.is_available() else "cpu"
-beta = 0.04
+beta = 0.01
 all_steps = 1000
 Q_batch_size = 5 # sampel 5 question for each steps
 num_samples_per_prompt = 8  # num_pre_Q
@@ -24,6 +26,9 @@ clip_param = 0.2
 learning_rate = 1e-6
 gradient_accumulation_steps = 4 # thise means we actually 
 use_bf16 = False  # Set to True if your GPU supports bf16
+use_wandb = True  # Set to True to enable wandb logging
+wandb_project = "simple-grpo"  # wandb project name
+wandb_run_name = None  # wandb run name, None for auto-generated
 
 # Generation parameters
 temperature = 0.9
@@ -45,6 +50,8 @@ QAs = [{'Q': x, 'A': y.split('####')[-1].strip()}
 
 system_prompt = """You are a helpful assistant. A conversation between User and Assistant. The user asks a question, and the Assistant solves it. The Assistant first thinks about the reasoning process in the mind and then provides the user with the answer. The reasoning process and answer are enclosed within <think> </think> and<answer> </answer> tags, respectively, i.e., <think> reasoning process here </think><answer> answer here </answer>."""
 
+
+
 def apply_chat_template(question):
     """Apply chat template to a question"""
     messages = [
@@ -56,22 +63,35 @@ def apply_chat_template(question):
 
 # Reward functions
 from math_verify import parse, verify, ExprExtractionConfig
-    
 def reward_correct(item, answer):
     pattern = r'\d+\.\d+|\d+/\d+|\d+'
-    nums = re.findall(pattern, answer)
-    if len(nums) == 0:
-        return -1.0
-    lastnum = nums[-1]
+    nums = re.findall(pattern, answer) # find all numbers in answer
+    if len(nums) == 0: return -1.0
+    lastnum = nums[-1] #  use the last number in answer to compare with ground_truth
     ans = parse(lastnum, extraction_config=[ExprExtractionConfig()])
     ground_truth = parse(item["A"], extraction_config=[ExprExtractionConfig()])
-    return 1 if verify(ans, ground_truth) else -1
+    return 1 if verify(ans, ground_truth) else 0
 
 def reward_format(item, answer):
-    pattern = r"^<think>.*?</think>[\n ]*<answer>.*?</answer>$"
-    think_count = answer.count("<think>") + answer.count("</think>")
-    answer_count = answer.count("<answer>") + answer.count("</answer>")
-    return 1.25 if re.match(pattern, answer, re.DOTALL | re.VERBOSE) and think_count == 2 and answer_count == 2 else -1
+    reasoning_word_list = ["since", "therefore", "thus", "because", "so", "hence", "perhaps", "let", "actually", "maybe", "assume", "suppose", "consider", "it follows that", "we have", "note that", "observe that"]
+    
+    lower_answer = answer.lower()
+    
+    reasoning_word_cnt = sum(lower_answer.count(word) for word in reasoning_word_list)
+    
+    if reasoning_word_cnt >= 10:
+        return 1
+    
+    return 0
+    
+    # print(reasoning_word_cnt)
+    
+    # return 0
+    
+    
+    # # pattern = r"^<think>(?:(?!</?think>)[\s\S]*?)</think>\s*<answer>(?:(?!</?answer>)[\s\S]*?)</answer><\|im_end\|>$"
+    # pattern = r"^<think>.*?</think><answer>.*?</answer>$"
+    # return 1.25 if re.match(pattern, answer, re.DOTALL | re.VERBOSE) else -1
 
 
 def get_per_token_logps(logits, input_ids):
@@ -156,18 +176,46 @@ def GRPO_step(model, batch, prompt_length):
     # PPO-style clipped loss
     ratio = torch.exp(per_token_logps - batch['old_logps'].to(device))
     clipped_ratio = torch.clamp(ratio, 1 - clip_param, 1 + clip_param)
-    per_token_loss = torch.min(ratio * advantages, clipped_ratio * advantages)
+    per_token_pg_loss = -torch.min(ratio * advantages, clipped_ratio * advantages)
     
-    # Add KL penalty
-    per_token_loss = -(per_token_loss - beta * per_token_kl)
+    # KL penalty (per token)
+    per_token_kl_loss = beta * per_token_kl
+    
+    # Combined loss per token
+    per_token_loss = per_token_pg_loss + per_token_kl_loss
     
     # Compute final loss
     loss = ((per_token_loss * completion_mask).sum(dim=1) / completion_mask.sum(dim=1).clamp(min=1)).mean()
     
-    return loss
+    # Compute average pg_loss and kl_loss for logging
+    avg_pg_loss = ((per_token_pg_loss * completion_mask).sum(dim=1) / completion_mask.sum(dim=1).clamp(min=1)).mean()
+    avg_kl_loss = ((per_token_kl_loss * completion_mask).sum(dim=1) / completion_mask.sum(dim=1).clamp(min=1)).mean()
+    
+    return loss, avg_pg_loss.item(), avg_kl_loss.item()
 
 
 def main():
+    # Initialize wandb if enabled
+    if use_wandb:
+        wandb.init(
+            project=wandb_project,
+            name=wandb_run_name,
+            config={
+                "model_path": model_path,
+                "beta": beta,
+                "all_steps": all_steps,
+                "Q_batch_size": Q_batch_size,
+                "num_samples_per_prompt": num_samples_per_prompt,
+                "train_batch_size": train_batch_size,
+                "clip_param": clip_param,
+                "learning_rate": learning_rate,
+                "gradient_accumulation_steps": gradient_accumulation_steps,
+                "temperature": temperature,
+                "max_new_tokens": max_new_tokens,
+                "use_bf16": use_bf16,
+            }
+        )
+    
     # Load models
     dtype = torch.bfloat16 if use_bf16 else torch.float32
     
@@ -220,12 +268,22 @@ def main():
         
         # Compute rewards
         rewards = []
+        correct_rewards = []
+        format_rewards = []
         for i, item in enumerate(sampled_items):
             for j in range(num_samples_per_prompt):
                 answer = answers[i * num_samples_per_prompt + j]
-                reward = reward_correct(item, answer) + reward_format(item, answer)
+                r_correct = reward_correct(item, answer)
+                r_format = reward_format(item, answer)
+                reward = r_correct + r_format
                 rewards.append(reward)
+                correct_rewards.append(r_correct)
+                format_rewards.append(r_format)
         rewards = torch.tensor(rewards, dtype=torch.float32)
+        
+        # Global metrics for this step
+        step_pg_losses = []
+        step_kl_losses = []
         
         # Process each prompt's samples
         for i, prompt_text in enumerate(prompts_text):
@@ -279,13 +337,17 @@ def main():
                 # Training step with optional automatic mixed precision
                 if scaler is not None:
                     with torch.amp.autocast('cuda', dtype=torch.float16):
-                        loss = GRPO_step(model, batch, prompt_length)
+                        loss, pg_loss, kl_loss = GRPO_step(model, batch, prompt_length)
                     loss = loss / gradient_accumulation_steps
                     scaler.scale(loss).backward()
                 else:
-                    loss = GRPO_step(model, batch, prompt_length)
+                    loss, pg_loss, kl_loss = GRPO_step(model, batch, prompt_length)
                     loss = loss / gradient_accumulation_steps
                     loss.backward()
+                
+                # Record metrics
+                step_pg_losses.append(pg_loss)
+                step_kl_losses.append(kl_loss)
                 
                 accumulated_steps += 1
                 
@@ -303,9 +365,27 @@ def main():
         if 'loss' in locals():
             progress.set_description(f"Loss: {loss.item() * gradient_accumulation_steps:.6f}")
         
-        # Print sample answer
-        if step % 5 == 0 and len(answers) > 0:
-            print(f"\nSample answer: {answers[0][:200]}...")
+        # Log to wandb
+        if use_wandb and len(step_pg_losses) > 0:
+            avg_correct_reward = np.mean(correct_rewards)
+            avg_format_reward = np.mean(format_rewards)
+            avg_pg_loss = np.mean(step_pg_losses)
+            avg_kl_loss = np.mean(step_kl_losses)
+            
+            wandb.log({
+                "reward/correct": avg_correct_reward,
+                "reward/format": avg_format_reward,
+                "loss/pg_loss": avg_pg_loss,
+                "loss/kl_loss": avg_kl_loss,
+                "loss/total": avg_pg_loss + avg_kl_loss,
+                "step": step,
+            }, step=step)
+        
+        # # Print sample answer
+        # if step % 5 == 0 and len(answers) > 0:
+        #     # print(f"\nSample answer: {answers[0][:200]}...")
+            
+        print(f"\nSample answer: {answers[0]}")
         
         # Save checkpoint
         if step % save_steps == 0:
@@ -317,6 +397,10 @@ def main():
             print(f'Model saved to {save_name}')
     
     print("\nTraining completed!")
+    
+    # Finish wandb run
+    if use_wandb:
+        wandb.finish()
 
 
 if __name__ == '__main__':

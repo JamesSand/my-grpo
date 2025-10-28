@@ -1,0 +1,21 @@
+2025-10-28 17:41:19,350 INFO    MainThread:2586483 [wandb_setup.py:_flush():81] Current SDK version is 0.22.2
+2025-10-28 17:41:19,350 INFO    MainThread:2586483 [wandb_setup.py:_flush():81] Configure stats pid to 2586483
+2025-10-28 17:41:19,350 INFO    MainThread:2586483 [wandb_setup.py:_flush():81] Loading settings from /home/zs7752/.config/wandb/settings
+2025-10-28 17:41:19,350 INFO    MainThread:2586483 [wandb_setup.py:_flush():81] Loading settings from /ssd1/zhizhou/workspace/simple_GRPO/wandb/settings
+2025-10-28 17:41:19,350 INFO    MainThread:2586483 [wandb_setup.py:_flush():81] Loading settings from environment variables
+2025-10-28 17:41:19,350 INFO    MainThread:2586483 [wandb_init.py:setup_run_log_directory():705] Logging user logs to /ssd1/zhizhou/workspace/simple_GRPO/wandb/run-20251028_174119-fdeq5nnh/logs/debug.log
+2025-10-28 17:41:19,350 INFO    MainThread:2586483 [wandb_init.py:setup_run_log_directory():706] Logging internal logs to /ssd1/zhizhou/workspace/simple_GRPO/wandb/run-20251028_174119-fdeq5nnh/logs/debug-internal.log
+2025-10-28 17:41:19,350 INFO    MainThread:2586483 [wandb_init.py:init():832] calling init triggers
+2025-10-28 17:41:19,351 INFO    MainThread:2586483 [wandb_init.py:init():837] wandb.init called with sweep_config: {}
+config: {'model_path': 'Qwen/Qwen2.5-0.5B-Instruct', 'beta': 0.01, 'all_steps': 1000, 'Q_batch_size': 5, 'num_samples_per_prompt': 8, 'train_batch_size': 8, 'clip_param': 0.2, 'learning_rate': 1e-06, 'gradient_accumulation_steps': 4, 'temperature': 0.9, 'max_new_tokens': 1024, 'use_bf16': False, '_wandb': {}}
+2025-10-28 17:41:19,351 INFO    MainThread:2586483 [wandb_init.py:init():880] starting backend
+2025-10-28 17:41:19,557 INFO    MainThread:2586483 [wandb_init.py:init():883] sending inform_init request
+2025-10-28 17:41:19,563 INFO    MainThread:2586483 [wandb_init.py:init():891] backend started and connected
+2025-10-28 17:41:19,565 INFO    MainThread:2586483 [wandb_init.py:init():961] updated telemetry
+2025-10-28 17:41:19,573 INFO    MainThread:2586483 [wandb_init.py:init():985] communicating run to backend with 90.0 second timeout
+2025-10-28 17:41:20,123 INFO    MainThread:2586483 [wandb_init.py:init():1036] starting run threads in backend
+2025-10-28 17:41:20,292 INFO    MainThread:2586483 [wandb_run.py:_console_start():2509] atexit reg
+2025-10-28 17:41:20,292 INFO    MainThread:2586483 [wandb_run.py:_redirect():2357] redirect: wrap_raw
+2025-10-28 17:41:20,292 INFO    MainThread:2586483 [wandb_run.py:_redirect():2426] Wrapping output streams.
+2025-10-28 17:41:20,293 INFO    MainThread:2586483 [wandb_run.py:_redirect():2449] Redirects installed.
+2025-10-28 17:41:20,295 INFO    MainThread:2586483 [wandb_init.py:init():1076] run started, returning control to user process
