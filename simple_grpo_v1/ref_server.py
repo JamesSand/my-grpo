@@ -50,6 +50,8 @@ if __name__ == '__main__':
             token_log_prob = torch.gather(log_probs, dim=1, index=input_ids_row.unsqueeze(1)).squeeze(1)
             per_token_logps.append(token_log_prob)
         return torch.stack(per_token_logps)
+    
+    
 
     raw_queue = queue.LifoQueue()
     result_queue = queue.LifoQueue()

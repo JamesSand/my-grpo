@@ -16,13 +16,13 @@ model_path = "Qwen/Qwen2.5-0.5B-Instruct"
 device = "cuda" if torch.cuda.is_available() else "cpu"
 beta = 0.04
 all_steps = 1000
-Q_batch_size = 5
+Q_batch_size = 5 # sampel 5 question for each steps
 num_samples_per_prompt = 8  # num_pre_Q
-train_batch_size = 8
+train_batch_size = 8 # backward for each 8 samples
 save_steps = 200
 clip_param = 0.2
 learning_rate = 1e-6
-gradient_accumulation_steps = 4
+gradient_accumulation_steps = 4 # thise means we actually 
 use_bf16 = False  # Set to True if your GPU supports bf16
 
 # Generation parameters
@@ -85,12 +85,14 @@ def get_per_token_logps(logits, input_ids):
 
 
 def generate_samples(model, prompts_text, num_samples):
-    """Generate multiple samples for each prompt"""
-    all_answers, all_answer_ids = [], []
+    """Generate multiple samples for each prompt and compute their log probabilities"""
+    all_answers, all_answer_ids, all_old_logps = [], [], []
     debug_cnt = 0
     for prompt in prompts_text:
         print(f"gen {debug_cnt}"); debug_cnt += 1
         prompt_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
+        prompt_length = prompt_ids.shape[1]
+        
         with torch.no_grad():
             output = model.generate(
                 prompt_ids.repeat(num_samples, 1),
@@ -100,45 +102,23 @@ def generate_samples(model, prompts_text, num_samples):
                 pad_token_id=tokenizer.pad_token_id,
                 eos_token_id=tokenizer.eos_token_id,
             )
+            
+            # Compute log probabilities for the generated sequences
+            logits = model(output).logits
+            logits = logits[:, :-1, :]
+            input_ids = output[:, 1:]
+            per_token_logps = get_per_token_logps(logits, input_ids)
+            # Only keep the completion part
+            per_token_logps = per_token_logps[:, prompt_length-1:]
+        
         gen_part = output[:, prompt_ids.shape[1]:]
         for i in range(gen_part.size(0)):
             answer_ids = gen_part[i]
             all_answers.append(tokenizer.decode(answer_ids, skip_special_tokens=True))
             all_answer_ids.append(answer_ids.cpu().tolist())
-    return all_answers, all_answer_ids
-
-
-# def generate_samples(model, prompts_text, num_samples):
-#     """Generate multiple samples for each prompt"""
-#     all_answers = []
-#     all_answer_ids = []
+            all_old_logps.append(per_token_logps[i].cpu())
     
-#     debug_cnt = 0
-    
-#     for prompt in prompts_text:
-#         print(f"gen {debug_cnt}")
-#         prompt_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
-        
-#         # Generate multiple samples
-#         for _ in range(num_samples):
-#             with torch.no_grad():
-#                 output = model.generate(
-#                     prompt_ids,
-#                     max_new_tokens=max_new_tokens,
-#                     temperature=temperature,
-#                     do_sample=True,
-#                     pad_token_id=tokenizer.pad_token_id,
-#                     eos_token_id=tokenizer.eos_token_id,
-#                 )
-            
-#             # Extract the generated answer
-#             answer_ids = output[0, prompt_ids.shape[1]:]
-#             answer_text = tokenizer.decode(answer_ids, skip_special_tokens=True)
-#             all_answers.append(answer_text)
-#             all_answer_ids.append(answer_ids.cpu().tolist())
-    
-#     return all_answers, all_answer_ids
-
+    return all_answers, all_answer_ids, all_old_logps
 
 def compute_ref_logps(ref_model, prompt_ids, answer_ids, prompt_length):
     """Compute reference model log probabilities"""
@@ -158,7 +138,7 @@ def GRPO_step(model, batch, prompt_length):
     advantages = batch['rewards'].to(device).unsqueeze(1)
     ref_per_token_logps = batch['ref_logps'].to(device)
     
-    # Forward pass
+    # Forward pass, calcualte pi(x)
     logits = model(inputs).logits
     logits = logits[:, :-1, :]
     input_ids = inputs[:, 1:]
@@ -174,13 +154,9 @@ def GRPO_step(model, batch, prompt_length):
     completion_mask = (inputs[:, prompt_length:] != tokenizer.pad_token_id).int()
     
     # PPO-style clipped loss
-    if 'old_logps' in batch:
-        ratio = torch.exp(per_token_logps - batch['old_logps'].to(device))
-        clipped_ratio = torch.clamp(ratio, 1 - clip_param, 1 + clip_param)
-        per_token_loss = torch.min(ratio * advantages, clipped_ratio * advantages)
-    else:
-        # For first iteration, use on-policy (no clipping needed)
-        per_token_loss = torch.exp(per_token_logps - per_token_logps.detach()) * advantages
+    ratio = torch.exp(per_token_logps - batch['old_logps'].to(device))
+    clipped_ratio = torch.clamp(ratio, 1 - clip_param, 1 + clip_param)
+    per_token_loss = torch.min(ratio * advantages, clipped_ratio * advantages)
     
     # Add KL penalty
     per_token_loss = -(per_token_loss - beta * per_token_kl)
@@ -239,7 +215,7 @@ def main():
         print(f"\nStep {step}: Generating samples...")
         model.eval()
         with torch.no_grad():
-            answers, answer_ids = generate_samples(model, prompts_text, num_samples_per_prompt)
+            answers, answer_ids, old_logps = generate_samples(model, prompts_text, num_samples_per_prompt)
         model.train()
         
         # Compute rewards
@@ -257,9 +233,10 @@ def main():
             prompt_ids_single = tokenizer(prompt_text, return_tensors="pt", add_special_tokens=False).input_ids
             prompt_length = prompt_ids_single.shape[1]
             
-            # Get current prompt's answers and rewards
+            # Get current prompt's answers, rewards, and old logps
             curr_answer_ids = answer_ids[i * num_samples_per_prompt:(i + 1) * num_samples_per_prompt]
             curr_rewards = rewards[i * num_samples_per_prompt:(i + 1) * num_samples_per_prompt]
+            curr_old_logps = old_logps[i * num_samples_per_prompt:(i + 1) * num_samples_per_prompt]
             
             # Skip if no variance in rewards
             if curr_rewards.max() - curr_rewards.min() < 1e-4:
@@ -274,10 +251,14 @@ def main():
                 batch_end = min(batch_start + train_batch_size, num_samples_per_prompt)
                 batch_answer_ids = curr_answer_ids[batch_start:batch_end]
                 batch_rewards = curr_rewards[batch_start:batch_end]
+                batch_old_logps = curr_old_logps[batch_start:batch_end]
                 
                 # Prepare batch inputs
                 tensor_list = [torch.tensor(ans_ids) for ans_ids in batch_answer_ids]
                 answer_ids_padded = pad_sequence(tensor_list, batch_first=True, padding_value=tokenizer.pad_token_id)
+                
+                # Pad old_logps to match answer_ids_padded
+                old_logps_padded = pad_sequence(batch_old_logps, batch_first=True, padding_value=0.0)
                 
                 # Concatenate prompt and answers
                 batch_size = answer_ids_padded.shape[0]
@@ -292,6 +273,7 @@ def main():
                     'inputs': merged_ids,
                     'rewards': batch_rewards,
                     'ref_logps': ref_logps,
+                    'old_logps': old_logps_padded,
                 }
                 
                 # Training step with optional automatic mixed precision
